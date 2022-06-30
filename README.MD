@@ -52,3 +52,7 @@ api_todo_items
 
 - run `air init`
 - run `air`
+
+## RUN
+
+- Start the server: `air`
