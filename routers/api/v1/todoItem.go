@@ -22,6 +22,11 @@ type TodoItem struct {
 	DeleteAt  *time.Time `json:"delete_at"`
 }
 
+// @Summary Get list todo items
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/items [get]
 func GetListItems(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := app.Gin{C: c}
@@ -36,6 +41,12 @@ func GetListItems(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+// @Summary Create list todo items
+// @Produce  json
+// @Param title body string true "Title"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/items [post]
 func CreateItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := app.Gin{C: c}
@@ -63,6 +74,12 @@ func CreateItem(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+// @Summary Get a single todo item
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/items/{id} [get]
 func GetItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := app.Gin{C: c}
@@ -82,6 +99,12 @@ func GetItem(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+// @Summary Delete a single todo item
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/items/{id} [delete]
 func DeleteItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := app.Gin{C: c}
@@ -106,6 +129,12 @@ func DeleteItem(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+// @Summary Update a single todo item
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/items/{id} [put]
 func UpdateItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := app.Gin{C: c}
