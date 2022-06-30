@@ -46,7 +46,9 @@ api_todo_items
 
 - Automatically reload server when code change
 
-* Using nodemon
+* Using air
 
-- npm install nodemon -g
-- run `nodemon --exec go run main.go --signal SIGTERM`
+- go install github.com/cosmtrek/air@latest
+
+- run `air init`
+- run `air`
