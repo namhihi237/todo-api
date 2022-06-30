@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -10,6 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+
+	"todo/pkg/app"
+	"todo/pkg/errors"
 )
 
 type TodoItem struct {
@@ -22,110 +23,113 @@ type TodoItem struct {
 }
 
 func GetListItems(db *gorm.DB) gin.HandlerFunc {
-	fmt.Println("GetListItems")
 	return func(c *gin.Context) {
+		appG := app.Gin{C: c}
+
 		var items []TodoItem
 		if err := db.Find(&items).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusInternalServerError, errors.SERVER_ERROR, nil)
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": items})
+		appG.Response(http.StatusOK, errors.SUCCESS, items)
 	}
 }
 
 func CreateItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		appG := app.Gin{C: c}
 		var item TodoItem
 
 		//To bind a request body into a type, use model binding.
 		//When using the Bind-method, Gin tries to infer the binder depending on the Content-Type header.
 		if err := c.ShouldBind(&item); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusInternalServerError, errors.SERVER_ERROR, nil)
 			return
 		}
 
 		item.Title = strings.TrimSpace(item.Title)
 		if item.Title == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "title is required"})
+			appG.Response(http.StatusBadRequest, errors.INVALID_PARAM, nil)
 			return
 		}
-
-		log.Println("item: ", item)
 
 		if err := db.Create(&item).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusInternalServerError, errors.SERVER_ERROR, nil)
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": item.Id})
+		appG.Response(http.StatusOK, errors.SUCCESS, item)
 	}
 }
 
 func GetItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		appG := app.Gin{C: c}
 		id, err := strconv.Atoi(c.Param("id")) // convert string to int
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusBadRequest, errors.INVALID_PARAM, nil)
 			return
 		}
 
 		var item TodoItem
 		if err := db.First(&item, id).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusNotFound, errors.NOT_FOUND, nil)
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": item})
+		appG.Response(http.StatusOK, errors.SUCCESS, item)
 	}
 }
 
 func DeleteItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		appG := app.Gin{C: c}
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusBadRequest, errors.INVALID_PARAM, nil)
 			return
 		}
 
 		var item TodoItem
 		if err := db.First(&item, id).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusNotFound, errors.NOT_FOUND, nil)
 			return
 		}
 
 		if err := db.Delete(&item).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusInternalServerError, errors.SERVER_ERROR, nil)
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": item})
+		appG.Response(http.StatusOK, errors.SUCCESS, nil)
 	}
 }
 
 func UpdateItem(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		appG := app.Gin{C: c}
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusBadRequest, errors.INVALID_PARAM, nil)
 			return
 		}
 
 		var item TodoItem
 
 		if err := c.ShouldBind(&item); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusInternalServerError, errors.SERVER_ERROR, nil)
 			return
 		}
 
 		if err := db.First(&item, id).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			appG.Response(http.StatusNotFound, errors.NOT_FOUND, nil)
 			return
 		}
 
 		item.Title = strings.TrimSpace(item.Title)
 		if item.Title == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "title is required"})
+			appG.Response(http.StatusBadRequest, errors.INVALID_PARAM, nil)
 			return
 		}
 
@@ -134,6 +138,6 @@ func UpdateItem(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": item})
+		appG.Response(http.StatusOK, errors.SUCCESS, item)
 	}
 }
