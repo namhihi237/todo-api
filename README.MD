@@ -43,3 +43,10 @@ api_todo_items
 - go get -u github.com/gin-gonic/gin
 - go get -u gorm.io/gorm
 - go get -u gorm.io/driver/mysql
+
+- Automatically reload server when code change
+
+* Using nodemon
+
+- npm install nodemon -g
+- run `nodemon --exec go run main.go --signal SIGTERM`
