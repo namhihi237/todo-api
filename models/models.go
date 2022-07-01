@@ -49,6 +49,7 @@ func Setup() {
 
 	// auto migration database
 	db.AutoMigrate(&TodoItem{})
+	db.AutoMigrate(&User{})
 }
 
 func GetDatabase() *gorm.DB {

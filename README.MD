@@ -44,6 +44,11 @@ api_todo_items
 - go get -u gorm.io/gorm
 - go get -u gorm.io/driver/mysql
 
+#### validator
+- https://pkg.go.dev/github.com/astaxie/beego/validation
+### bcrypt
+- https://pkg.go.dev/golang.org/x/crypto/bcrypt
+
 - Automatically reload server when code change
 
 * Using air
@@ -52,6 +57,8 @@ api_todo_items
 
 - run `air init`
 - run `air`
+
+
 
 ## RUN
 

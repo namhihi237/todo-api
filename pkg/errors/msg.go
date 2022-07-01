@@ -7,6 +7,9 @@ var MsgFlags = map[int]string{
 	UNAUTHORIZED:  "unauthorized",
 	FORBIDDEN:     "forbidden",
 	SERVER_ERROR:  "server error",
+
+	ERROR_HASH_PASSWORD: "error hash password",
+	EMAIL_EXIST:         "email exist",
 }
 
 func GetMsg(code int) string {
