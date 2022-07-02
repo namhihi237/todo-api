@@ -41,6 +41,7 @@ type UserLogin struct {
 // @Param password body string true "Password"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Router /auth/register [post]
 func Register(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := app.Gin{C: c}
@@ -86,6 +87,7 @@ func Register(db *gorm.DB) gin.HandlerFunc {
 // @Param password body string true "Password"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Router /auth/login [post]
 func Login(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := app.Gin{C: c}
