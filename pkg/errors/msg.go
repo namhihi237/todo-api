@@ -8,8 +8,10 @@ var MsgFlags = map[int]string{
 	FORBIDDEN:     "forbidden",
 	SERVER_ERROR:  "server error",
 
-	ERROR_HASH_PASSWORD: "error hash password",
-	EMAIL_EXIST:         "email exist",
+	ERROR_HASH_PASSWORD:   "error hash password",
+	GENERATED_TOKEN_ERROR: "generated token error",
+	EMAIL_EXIST:           "email exist",
+	INVALID_TOKEN:         "invalid token",
 }
 
 func GetMsg(code int) string {

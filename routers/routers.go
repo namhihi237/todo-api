@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"todo/middleware"
 	models "todo/models"
 	v1 "todo/routers/api/v1"
 
@@ -24,7 +25,12 @@ func InitRouter() *gin.Engine {
 	db := models.GetDatabase()
 
 	// simple group router
+	// auth router
+	router.POST("/auth/register", v1.Register(db))
+	router.POST("/auth/login", v1.Login(db))
+
 	apiV1 := router.Group("/api/v1")
+	apiV1.Use(middleware.JWT())
 	{
 		// item router
 		apiV1.GET("/items", v1.GetListItems(db))
@@ -33,8 +39,6 @@ func InitRouter() *gin.Engine {
 		apiV1.DELETE("/items/:id", v1.DeleteItem(db))
 		apiV1.PUT("/items/:id", v1.UpdateItem(db))
 
-		// user router
-		apiV1.POST("/users", v1.Register(db))
 	}
 
 	return router
